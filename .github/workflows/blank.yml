@@ -1,0 +1,16 @@
+name: CI
+
+on:
+  create:
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Run a one-line script
+      run: |
+        echo ${{ env.GITHUB_REF }}
+        echo ${{ env.GITHUB_SHA }}

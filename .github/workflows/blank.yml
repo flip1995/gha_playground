@@ -9,10 +9,5 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
     - name: Run a one-line script
-      run: |
-        echo $GITHUB_REF
-        echo $GITHUB_SHA
-        echo ${{ github.ref }}
-        echo ${{ github.sha }}
+      run: basename ${{ github.ref }}

@@ -12,7 +12,7 @@ jobs:
     - uses: actions/checkout@v2
     - name: Run a one-line script
       run: |
-        echo ${{ github.GITHUB_REF }}
-        echo ${{ github.GITHUB_SHA }}
-        echo ${{ github.event.create.GITHUB_REF }}
-        echo ${{ github.event.create.GITHUB_SHA }}
+        echo $GITHUB_REF
+        echo $GITHUB_SHA
+        echo ${{ github.ref }}
+        echo ${{ github.sha }}

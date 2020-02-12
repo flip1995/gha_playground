@@ -10,4 +10,6 @@ jobs:
 
     steps:
     - name: Run a one-line script
-      run: basename ${{ github.ref }}
+      run: |
+        ${{ startswith(github.ref, 'refs/tags/') }} && TAG_NAME=$(basename ${{ github.ref }})
+        echo $TAG_NAME

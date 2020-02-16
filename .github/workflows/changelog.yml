@@ -24,17 +24,19 @@ jobs:
           grep "^changelog: " | \
           sed "s/changelog: //g")
         if [[ -z "$output" ]]; then
-          BODY="Thanks for contributing and improving Clippy!
+          BODY="|
+          Thanks for contributing and improving Clippy!
 
-        Every PR to Clippy must contain a \`changelog: ...\` line in the description.
+          Every PR to Clippy must contain a \`changelog: ...\` line in the description.
 
-        If you're unsure about the message, just add \`changelog: none\` and let the reviewer deal with it."
+          If you're unsure about the message, just add \`changelog: none\` and let the reviewer deal with it."
         elif [[ "$output" = "none" ]]; then
-          BODY="Thanks for contributing and improving Clippy!
+          BODY="|
+          Thanks for contributing and improving Clippy!
 
-        The \`changelog:\` entry in the description is \`none\`. Usually this is only correct for internal changes.
+          The \`changelog:\` entry in the description is \`none\`. Usually this is only correct for internal changes.
 
-        Consider changing it yourself or let the reviewer deal with it."
+          Consider changing it yourself or let the reviewer deal with it."
         fi
         echo "::set-output name=PR::${PR}"
         echo "::set-output name=BODY::${BODY}"

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  pull_request:
+    types: [created]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Check changelog
+      id: changelog
+      run: |
+        MESSAGE=$(git log --format=%B -n 1)
+        PR=$(echo "$MESSAGE" | grep -o "#[0-9]*" | head -1 | sed -e 's/^#//')
+        output=$(curl -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -s "https://api.github.com/repos/rust-lang/rust-clippy/pulls/$PR" | \
+          python -c "import sys, json; print(json.load(sys.stdin)['body'])" | \
+          grep "^changelog: " | \
+          sed "s/changelog: //g")
+        if [[ -z "$output" ]]; then
+          BODY="Thanks for contributing and improving Clippy!
+
+        Every PR to Clippy must contain a \`changelog: ...\` line in the description.
+
+        If you're unsure about the message, just add \`changelog: none\` and let the reviewer deal with it."
+        elif [[ "$output" = "none" ]]; then
+          BODY="Thanks for contributing and improving Clippy!
+
+        The \`changelog:\` entry in the description is \`none\`. Usually this is only correct for internal changes.
+
+        Consider changing it yourself or let the reviewer deal with it."
+        fi
+        echo "::set-output name=PR::$PR"
+        echo "::set-output name=BODY::$BODY"
+      env:
+        PYTHONIOENCODING: 'utf-8'
+
+    - name: Create or Update Comment
+      if: steps.changelog.outputs.BODY != ""
+      uses: peter-evans/create-or-update-comment@v1.0.0
+      with:
+        token: ${{ github.token }}
+        issue-number: ${{ steps.changelog.outputs.PR }}
+        body: ${{ steps.changelog.outputs.BODY }}

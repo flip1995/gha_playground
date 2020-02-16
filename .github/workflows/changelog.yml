@@ -43,4 +43,4 @@ jobs:
         token: ${{ github.token }}
         issue-number: ${{ steps.changelog.outputs.PR }}
         body: |
-          ${{ steps.changelog.outputs.BODY }}
+          "${{ steps.changelog.outputs.BODY }}"

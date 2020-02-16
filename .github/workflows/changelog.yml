@@ -37,8 +37,8 @@ jobs:
 
         Consider changing it yourself or let the reviewer deal with it."
         fi
-        echo "::set-output name=PR::$PR"
-        echo "::set-output name=BODY::$BODY"
+        echo "::set-env name=PR::${PR}"
+        echo "::set-env name=BODY::${BODY}"
       env:
         PYTHONIOENCODING: 'utf-8'
 
@@ -47,5 +47,5 @@ jobs:
       uses: peter-evans/create-or-update-comment@v1.0.0
       with:
         token: ${{ github.token }}
-        issue-number: ${{ steps.changelog.outputs.PR }}
-        body: ${{ steps.changelog.outputs.BODY }}
+        issue-number: ${{ env.PR }}
+        body: ${{ env.BODY }}

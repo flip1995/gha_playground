@@ -10,11 +10,6 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout
-      uses: actions/checkout@v2.0.0
-      with:
-        ref: ${{ github.ref }}
-
     - name: Check changelog
       id: changelog
       run: |
@@ -25,18 +20,18 @@ jobs:
           sed "s/changelog: //g")
         if [[ -z "$output" ]]; then
           BODY="|
-          Thanks for contributing and improving Clippy!
+        Thanks for contributing and improving Clippy!
 
-          Every PR to Clippy must contain a \`changelog: ...\` line in the description.
+        Every PR to Clippy must contain a \`changelog: ...\` line in the description.
 
-          If you're unsure about the message, just add \`changelog: none\` and let the reviewer deal with it."
+        If you're unsure about the message, just add \`changelog: none\` and let the reviewer deal with it."
         elif [[ "$output" = "none" ]]; then
           BODY="|
-          Thanks for contributing and improving Clippy!
+        Thanks for contributing and improving Clippy!
 
-          The \`changelog:\` entry in the description is \`none\`. Usually this is only correct for internal changes.
+        The \`changelog:\` entry in the description is \`none\`. Usually this is only correct for internal changes.
 
-          Consider changing it yourself or let the reviewer deal with it."
+        Consider changing it yourself or let the reviewer deal with it."
         fi
         echo "::set-output name=PR::${PR}"
         echo "::set-output name=BODY::${BODY}"
@@ -49,4 +44,5 @@ jobs:
       with:
         token: ${{ github.token }}
         issue-number: ${{ steps.changelog.outputs.PR }}
-        body: ${{ steps.changelog.outputs.BODY }}
+        body: |
+          ${{ steps.changelog.outputs.BODY }}

@@ -1,0 +1,33 @@
+name: Rust
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install RTIM
+      uses: flip1995/install@install_cached
+      with:
+        crate: rustup-toolchain-install-master
+        key: ${{ runner.os }}-x86_64-unknown-linux-gnu-${{ hashFiles('Cargo.lock') }}
+        restore-keys: ${{ runner.os }}-x86_64-unknown-linux-gnu
+    - name: Install cargo-cache
+      uses: flip1995/install@install_cached
+      with:
+        crate: cargo-cache
+        use-tool-cache: true
+    - uses: actions/checkout@v2
+    - name: Run RTIM
+      run: rustup-toolchain-install-master -f -n master -c rustc-dev -c llvm-tools
+    - name: Run cargo-cache
+      run: cargo cache

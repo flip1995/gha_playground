@@ -7,3 +7,5 @@ more text on master
 touchy
 
 no cached
+
+now with debugging and latest version resolved
